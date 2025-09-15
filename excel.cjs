@@ -19,12 +19,6 @@ async function toSheet(roleLevel, name) {
     sheet.cell('E' + row).value('You can:\r\n' + skill.description.map(d => ' - ' + d).join('\r\n') + '\r\n');
     row++;
   }
-  for (;row < 27; row++) {
-    sheet.cell('B' + row).value('');
-    sheet.cell('C' + row).value('');
-    sheet.cell('D' + row).value('');
-    sheet.cell('E' + row).value('');
-  }
 
   await wb.toFileAsync(name);
 }
