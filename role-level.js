@@ -1,25 +1,33 @@
 export class RoleLevel {
   /**
    * @param {string} name
+   * @param {string} title
    * @param {string} grade
-   * @param {Skill[]} skills
+   * @param {SkillLevel[]} skills
    */
-  constructor({name, grade, skills}) {
+  constructor({name, title, grade, skills}) {
     this.name = name;
+    this.title = title;
     this.grade = grade;
     this.skills = skills;
   }
 }
 
-export class Skill {
+export class SkillLevel {
   /**
    * @param {string} name
+   * @param {string} description - general description for this skill
    * @param {string} level
-   * @param {string[]} description
+   * @param {string[]} levelDescription - specific description points for this skill-level
    */
-  constructor({name, level, description}) {
+  constructor({name, level, description, levelDescription}) {
     this.name = name;
     this.level = level;
     this.description = description;
+    this.levelDescription = levelDescription;
+  }
+
+  get levelDescriptionString() {
+    return 'You can:\r\n' + this.levelDescription.map(d => ' - ' + d).join('\r\n');
   }
 }

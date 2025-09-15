@@ -1,13 +1,18 @@
 import {levelsForRole} from "./parse-role.js";
 import {NO_GRADE, ROLE_CONFIG} from "./config.js";
 import excel from "./excel.cjs";
+import {loadSkills} from "./skills.js";
 
 async function run() {
   const outputDir = ((process.argv[2] || './').replace(/[/\\]?$/, '/'));
-  console.log('writing to', outputDir);
+  console.log('Output to', outputDir);
+
+  // load skill definitions
+  const skillDefinitions = await loadSkills();
+
   for (const role of ROLE_CONFIG) {
     console.log('-'.repeat(60));
-    const roleLevels = await levelsForRole(role);
+    const roleLevels = await levelsForRole(role, skillDefinitions);
     for (const roleLevel of roleLevels) {
       if (roleLevel.grade !== NO_GRADE) {
         await excel.toSheet(roleLevel, `${outputDir}DDaT assessment - ${role.title} - ${roleLevel.grade} - ${roleLevel.name}.xlsx`);

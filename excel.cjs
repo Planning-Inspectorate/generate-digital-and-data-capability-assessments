@@ -9,14 +9,15 @@ async function toSheet(roleLevel, name) {
 
   const sheet = wb.sheet("Self-Assessment");
 
+  sheet.cell("C12").value(roleLevel.title);
   sheet.cell("C13").value(roleLevel.name);
 
   let row = 17;
   for (const skill of roleLevel.skills) {
     sheet.cell('B' + row).value(skill.name);
-    sheet.cell('C' + row).value('');
+    sheet.cell('C' + row).value(skill.description);
     sheet.cell('D' + row).value(capitaliseFirst(skill.level));
-    sheet.cell('E' + row).value('You can:\r\n' + skill.description.map(d => ' - ' + d).join('\r\n') + '\r\n');
+    sheet.cell('E' + row).value(skill.levelDescriptionString + '\r\n');
     row++;
   }
 

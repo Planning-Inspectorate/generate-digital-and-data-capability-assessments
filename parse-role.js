@@ -6,51 +6,52 @@ import {
   getDescendantsByTag,
   getText
 } from "./parsing.js";
-import {RoleLevel, Skill} from "./role-level.js";
-import {DEFAULT_GRADE_MAP, NO_GRADE, NO_PREFIX} from "./config.js";
+import {RoleLevel, SkillLevel} from "./role-level.js";
+import {BASE_URL, DEFAULT_GRADE_MAP, NO_GRADE, NO_PREFIX} from "./config.js";
 import {parse} from "parse5";
-
-const BASE_URL = 'https://ddat-capability-framework.service.gov.uk/role/';
 
 /**
  * @param {RoleConfig} role
+ * @param {SkillDefinition[]} skillDefinitions
  * @returns {Promise<RoleLevel[]>}
  */
-export async function levelsForRole(role) {
-  const res = await fetch(BASE_URL + role.url);
-  return parseHtmlPageToRoleLevels(await res.text(), role);
+export async function levelsForRole(role, skillDefinitions) {
+  const res = await fetch(BASE_URL + '/role/' + role.url);
+  return parseHtmlPageToRoleLevels(await res.text(), role, skillDefinitions);
 }
 
 /**
  * @param {string} html
  * @param {RoleConfig} role
+ * @param {SkillDefinition[]} skillDefinitions
  * @returns {RoleLevel[]}
  */
-export function parseHtmlPageToRoleLevels(html, role) {
+export function parseHtmlPageToRoleLevels(html, role, skillDefinitions) {
   const page = parse(html);
   const body = page.childNodes[1].childNodes.find(n => n.tagName === 'body');
   const main = getDescendantById(body, 'main-content');
-  return toRoleLevels(main, role.name, role.gradeMap || DEFAULT_GRADE_MAP);
+  return toRoleLevels(main, role, skillDefinitions);
 }
 
 /**
  * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode} content
- * @param {string} role
- * @param {Object<string|Symbol, string>} gradeMap
+ * @param {RoleConfig} role
+ * @param {SkillDefinition[]} skillDefinitions
  * @returns {RoleLevel[]}
  */
-export function toRoleLevels(content, role, gradeMap) {
-  const elements = getRoleLevelsElements(content, role);
-  return elements.map(els => parseElementGroupToRoleLevel(els, role, gradeMap));
+export function toRoleLevels(content, role, skillDefinitions) {
+  const elements = getRoleLevelsElements(content, role.name);
+  return elements.map(els => parseElementGroupToRoleLevel(els, role, role.gradeMap || DEFAULT_GRADE_MAP, skillDefinitions));
 }
 
 /**
  * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode[]} els
- * @param {string} role
+ * @param {RoleConfig} role
  * @param {Object<string|Symbol, string>} gradeMap
+ * @param {SkillDefinition[]} skillDefinitions
  * @returns {RoleLevel}
  */
-function parseElementGroupToRoleLevel(els, role, gradeMap) {
+function parseElementGroupToRoleLevel(els, role, gradeMap, skillDefinitions) {
   const table = els.find(el => el.tagName === 'table');
   const tbody = table.childNodes.find(el => el.tagName === 'tbody');
   const rows = getDescendantsByTag(tbody, 'tr');
@@ -60,11 +61,13 @@ function parseElementGroupToRoleLevel(els, role, gradeMap) {
     const skill = getDescendantByClass(header, 'skill-name');
     const level = getDescendantByContent(header, 'Level:');
     const youCan = getDescendantsByTag(getDescendantByTag(row, 'td'), 'li');
+    const skillName = getText(skill);
 
-    skills.push(new Skill({
-      name: getText(skill),
+    skills.push(new SkillLevel({
+      name: skillName,
       level: getText(level)?.replace('Level: ', ''),
-      description: youCan.map(getText)
+      description: skillDefinitions.find(sd => sd.name === skillName)?.description,
+      levelDescription: youCan.map(getText)
     }));
   }
 
@@ -73,7 +76,8 @@ function parseElementGroupToRoleLevel(els, role, gradeMap) {
   return new RoleLevel({
     // replace leading numeric
     name,
-    grade: gradeForRoleName(name, role, gradeMap),
+    title: role.title,
+    grade: gradeForRoleName(name, role.name, gradeMap),
     skills
   });
 }
