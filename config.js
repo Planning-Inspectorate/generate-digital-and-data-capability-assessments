@@ -1,3 +1,5 @@
+export const BASE_URL = 'https://ddat-capability-framework.service.gov.uk';
+
 export const GRADES = {
   EO: 'EO',
   HEO: 'HEO',

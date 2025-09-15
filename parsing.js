@@ -61,7 +61,7 @@ export function getDescendantById(node, id) {
 export function getDescendantByClass(node, className) {
   if (node.childNodes) {
     for (const item of node.childNodes) {
-      if (item?.attrs?.some(a => a.name === 'class' && a.value.includes(className))) {
+      if (item?.attrs?.some(a => a.name === 'class' && hasClassName(a.value, className))) {
         return item;
       }
       const child =  getDescendantByClass(item, className);
@@ -70,6 +70,35 @@ export function getDescendantByClass(node, className) {
       }
     }
   }
+}
+
+/**
+ * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode} node
+ * @param {string} className
+ * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode[]} results
+ * @returns {import('parse5').DefaultTreeAdapterTypes.ChildNode[]}
+ */
+export function getDescendantsByClass(node, className, results = []) {
+  if (node.childNodes) {
+    for (let i = 0; i < node.childNodes.length; i++) {
+      const item = node.childNodes[i];
+      if (item?.attrs?.some(a => a.name === 'class' && hasClassName(a.value, className))) {
+        results.push(item);
+      }
+      getDescendantsByClass(item, className, results);
+    }
+  }
+  return results;
+}
+
+/**
+ * @param {string} value
+ * @param {string} className
+ * @returns {boolean}
+ */
+function hasClassName(value, className) {
+  const classes = value.split(' ');
+  return classes.includes(className);
 }
 
 /**
