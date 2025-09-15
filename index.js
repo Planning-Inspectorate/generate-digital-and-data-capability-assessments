@@ -1,18 +1,11 @@
-import {parse} from "parse5";
-import {getDescendantById} from "./parsing.js";
-import {getRoleLevels} from "./role-levels.js";
-import {DEFAULT_GRADE_MAP, ROLES} from "./roles.js";
+import {levelsForRole} from "./parse-role.js";
+import {ROLE_CONFIG} from "./config.js";
 
-const BASE_URL = 'https://ddat-capability-framework.service.gov.uk/role/';
 
 async function run() {
-  for (const role of ROLES) {
+  for (const role of ROLE_CONFIG) {
     console.log('-'.repeat(60));
-    const res = await fetch(BASE_URL + role.url);
-    const page = parse(await res.text());
-    const body = page.childNodes[1].childNodes.find(n => n.tagName === 'body');
-    const main = getDescendantById(body, 'main-content');
-    const roleLevels = getRoleLevels(main, role.name, role.grades || DEFAULT_GRADE_MAP);
+    const roleLevels = await levelsForRole(role);
     for (const roleLevel of roleLevels) {
       debugPrintRole(roleLevel, false);
     }
@@ -34,7 +27,5 @@ function debugPrintRole(roleLevel, full = false) {
     }
   }
 }
-
-
 
 run().catch(console.error);

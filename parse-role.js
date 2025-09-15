@@ -1,12 +1,37 @@
 import {
   getDescendantByClass,
   getDescendantByContent,
+  getDescendantById,
   getDescendantByTag,
   getDescendantsByTag,
   getText
 } from "./parsing.js";
 import {RoleLevel, Skill} from "./role-level.js";
-import {NO_GRADE, NO_PREFIX} from "./roles.js";
+import {DEFAULT_GRADE_MAP, NO_GRADE, NO_PREFIX} from "./config.js";
+import {parse} from "parse5";
+
+const BASE_URL = 'https://ddat-capability-framework.service.gov.uk/role/';
+
+/**
+ * @param {RoleConfig} role
+ * @returns {Promise<RoleLevel[]>}
+ */
+export async function levelsForRole(role) {
+  const res = await fetch(BASE_URL + role.url);
+  return parseHtmlPageToRoleLevels(await res.text(), role);
+}
+
+/**
+ * @param {string} html
+ * @param {RoleConfig} role
+ * @returns {RoleLevel[]}
+ */
+export function parseHtmlPageToRoleLevels(html, role) {
+  const page = parse(html);
+  const body = page.childNodes[1].childNodes.find(n => n.tagName === 'body');
+  const main = getDescendantById(body, 'main-content');
+  return toRoleLevels(main, role.name, role.gradeMap || DEFAULT_GRADE_MAP);
+}
 
 /**
  * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode} content
@@ -14,9 +39,9 @@ import {NO_GRADE, NO_PREFIX} from "./roles.js";
  * @param {Object<string|Symbol, string>} gradeMap
  * @returns {RoleLevel[]}
  */
-export function getRoleLevels(content, role, gradeMap) {
+export function toRoleLevels(content, role, gradeMap) {
   const elements = getRoleLevelsElements(content, role);
-  return elements.map(els => toRoleLevel(els, role, gradeMap));
+  return elements.map(els => parseElementGroupToRoleLevel(els, role, gradeMap));
 }
 
 /**
@@ -25,7 +50,7 @@ export function getRoleLevels(content, role, gradeMap) {
  * @param {Object<string|Symbol, string>} gradeMap
  * @returns {RoleLevel}
  */
-function toRoleLevel(els, role, gradeMap) {
+function parseElementGroupToRoleLevel(els, role, gradeMap) {
   const table = els.find(el => el.tagName === 'table');
   const tbody = table.childNodes.find(el => el.tagName === 'tbody');
   const rows = getDescendantsByTag(tbody, 'tr');
@@ -59,7 +84,7 @@ function toRoleLevel(els, role, gradeMap) {
  * @param {Object<string|Symbol, string>} gradeMap
  * @returns {string|Symbol}
  */
-function gradeForRoleName(name, role,  gradeMap) {
+function gradeForRoleName(name, role, gradeMap) {
   const lowerName = name.toLowerCase().trim();
   for (const [prefix, grade] of Object.entries(gradeMap)) {
     if (lowerName.startsWith(prefix)) {
@@ -74,7 +99,6 @@ function gradeForRoleName(name, role,  gradeMap) {
 
 
 /**
- *
  * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode} main
  * @param {string} role
  * @returns {import('parse5').DefaultTreeAdapterTypes.ChildNode[][]}

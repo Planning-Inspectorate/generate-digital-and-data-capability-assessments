@@ -17,7 +17,10 @@ export const DEFAULT_GRADE_MAP = {
   'principal': GRADES.G6
 };
 
-export const ROLES = [
+/**
+ * @type {RoleConfig[]}
+ */
+export const ROLE_CONFIG = [
   {
     name: 'developer',
     url: 'software-developer'
