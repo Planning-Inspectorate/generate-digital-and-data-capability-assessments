@@ -107,7 +107,7 @@ function getRoleLevelsElements(main, role) {
   const levels = [];
   let els = [];
   for (const node of main.childNodes) {
-    if (node.tagName === 'h3' && node.childNodes[0].value.toLowerCase().includes(role)) {
+    if (node.tagName === 'h3' && getText(node).toLowerCase().includes(role)) {
       if (els.length > 0) {
         levels.push(els);
         els = [];
@@ -116,6 +116,9 @@ function getRoleLevelsElements(main, role) {
     } else if (els.length > 0) {
       els.push(node);
     }
+  }
+  if (els.length > 0) {
+    levels.push(els); // push the last role level
   }
   return levels;
 }
