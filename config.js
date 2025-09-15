@@ -23,18 +23,22 @@ export const DEFAULT_GRADE_MAP = {
 export const ROLE_CONFIG = [
   {
     name: 'developer',
-    url: 'software-developer'
+    url: 'software-developer',
+    title: 'Software Developer'
   },
   {
     name: 'data architect',
-    url: 'data-architect'
+    url: 'data-architect',
+    title: 'Data Architect'
   },
   {
     name: 'technical architect',
-    url: 'technical-architect'
+    url: 'technical-architect',
+    title: 'Technical Architect'
   },
   {
     name: 'data engineer',
-    url: 'data-engineer'
+    url: 'data-engineer',
+    title: 'Data Engineer'
   }
 ];

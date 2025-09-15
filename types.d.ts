@@ -5,6 +5,7 @@ export interface GradeMap {
 export interface RoleConfig {
     name: string;
     url: string;
+    title: string;
     gradeMap?: GradeMap;
 }
 
