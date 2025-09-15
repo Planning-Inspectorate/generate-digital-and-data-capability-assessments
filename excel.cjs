@@ -16,7 +16,7 @@ async function toSheet(roleLevel, name) {
     sheet.cell('B' + row).value(skill.name);
     sheet.cell('C' + row).value('');
     sheet.cell('D' + row).value(capitaliseFirst(skill.level));
-    sheet.cell('E' + row).value('You can:\r\n' + skill.description.map(d => ' - ' + d).join('\r\n'));
+    sheet.cell('E' + row).value('You can:\r\n' + skill.description.map(d => ' - ' + d).join('\r\n') + '\r\n');
     row++;
   }
   for (;row < 27; row++) {
