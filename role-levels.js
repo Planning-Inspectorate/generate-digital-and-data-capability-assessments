@@ -6,23 +6,26 @@ import {
   getText
 } from "./parsing.js";
 import {RoleLevel, Skill} from "./role-level.js";
+import {NO_GRADE, NO_PREFIX} from "./roles.js";
 
 /**
  * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode} content
  * @param {string} role
+ * @param {Object<string|Symbol, string>} gradeMap
  * @returns {RoleLevel[]}
  */
-export function getRoleLevels(content, role) {
+export function getRoleLevels(content, role, gradeMap) {
   const elements = getRoleLevelsElements(content, role);
-  return elements.map(els => toRoleLevel(els, role));
+  return elements.map(els => toRoleLevel(els, role, gradeMap));
 }
 
 /**
  * @param {import('parse5').DefaultTreeAdapterTypes.ChildNode[]} els
  * @param {string} role
+ * @param {Object<string|Symbol, string>} gradeMap
  * @returns {RoleLevel}
  */
-function toRoleLevel(els, role) {
+function toRoleLevel(els, role, gradeMap) {
   const table = els.find(el => el.tagName === 'table');
   const tbody = table.childNodes.find(el => el.tagName === 'tbody');
   const rows = getDescendantsByTag(tbody, 'tr');
@@ -40,12 +43,33 @@ function toRoleLevel(els, role) {
     }));
   }
 
+  const name = getText(els[0])?.replace(/^[0-9]+\.\s/, '');
+
   return new RoleLevel({
     // replace leading numeric
-    name: getText(els[0])?.replace(/^[0-9]+\.\s/, ''),
-    grades: [],
+    name,
+    grade: gradeForRoleName(name, role, gradeMap),
     skills
   });
+}
+
+/**
+ * @param {string} name
+ * @param {string} role
+ * @param {Object<string|Symbol, string>} gradeMap
+ * @returns {string|Symbol}
+ */
+function gradeForRoleName(name, role,  gradeMap) {
+  const lowerName = name.toLowerCase().trim();
+  for (const [prefix, grade] of Object.entries(gradeMap)) {
+    if (lowerName.startsWith(prefix)) {
+      return grade;
+    }
+  }
+  if (gradeMap[NO_PREFIX] && lowerName === role) {
+    return gradeMap[NO_PREFIX];
+  }
+  return NO_GRADE;
 }
 
 

@@ -1,12 +1,12 @@
 export class RoleLevel {
   /**
    * @param {string} name
-   * @param {string[]} grades
+   * @param {string} grade
    * @param {Skill[]} skills
    */
-  constructor({name, grades, skills}) {
+  constructor({name, grade, skills}) {
     this.name = name;
-    this.grades = grades;
+    this.grade = grade;
     this.skills = skills;
   }
 }
