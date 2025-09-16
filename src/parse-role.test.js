@@ -6,11 +6,11 @@ import {GRADES, NO_GRADE} from "./config.js";
 
 describe('parse-role', () => {
   test('should parse roles and skill levels',  async() => {
-    const page = await fs.readFile('./software-developer.html');
+    const page = await fs.readFile(new URL('./software-developer.html', import.meta.url));
     const roleLevels = parseHtmlPageToRoleLevels(page.toString(), {
       url: 'software-developer',
       name: 'developer'
-    });
+    }, []);
 
     assert.strictEqual(roleLevels.length, 9);
 

@@ -5,7 +5,7 @@ import {parseSkills} from "./skills.js";
 
 describe('skills', () => {
   test('should parse skills',  async() => {
-    const page = await fs.readFile('./skills.html');
+    const page = await fs.readFile(new URL('./skills.html', import.meta.url));
     const skills = parseSkills(page.toString());
 
     assert.strictEqual(skills.length, 188);
