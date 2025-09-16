@@ -14,11 +14,12 @@ async function run() {
     console.log('-'.repeat(60));
     const roleLevels = await levelsForRole(role, skillDefinitions);
     for (const roleLevel of roleLevels) {
-      if (roleLevel.grade !== NO_GRADE) {
+      if (roleLevel.grade === NO_GRADE) {
+        console.log(roleLevel.name, '(skipping role-level with no grade configured)');
+      } else {
+        debugPrintRole(roleLevel, false);
         await excel.toSheet(roleLevel, `${outputDir}PINS D&D Capability Assessment - ${role.title} - ${roleLevel.grade} - ${roleLevel.name}.xlsx`);
       }
-
-      debugPrintRole(roleLevel, false);
     }
   }
 }
