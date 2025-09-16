@@ -29,18 +29,63 @@ export const ROLE_CONFIG = [
     title: 'Software Developer'
   },
   {
+    name: 'devops engineer',
+    url: 'development-operations-devops-engineer',
+    title: 'DevOps Engineer',
+    gradeMap: {
+      'senior': GRADES.SEO
+    }
+  },
+  {
     name: 'data architect',
     url: 'data-architect',
-    title: 'Data Architect'
+    title: 'Data Architect',
+    gradeMap: {
+      'senior': GRADES.G7
+    }
   },
   {
     name: 'technical architect',
     url: 'technical-architect',
-    title: 'Technical Architect'
+    title: 'Technical Architect',
+    gradeMap: {
+      [NO_PREFIX]: GRADES.SEO,
+      'lead': GRADES.G7
+    }
   },
   {
     name: 'data engineer',
     url: 'data-engineer',
     title: 'Data Engineer'
+  },
+  {
+    name: 'data scientist',
+    url: 'data-scientist',
+    title: 'Data Scientist',
+    gradeMap: {
+      'principal': GRADES.SEO,
+      'lead': GRADES.G7
+    }
+  },
+  {
+    name: 'infrastructure operations engineer',
+    url: 'infrastructure-operations-engineer',
+    title: 'Infrastructure Operations Engineer',
+    gradeMap: {
+      'senior': GRADES.SEO
+    }
+  },
+  {
+    name: 'security architect',
+    url: 'security-architect',
+    title: 'Security Architect',
+    gradeMap: {
+      'lead': GRADES.G7
+    }
+  },
+  {
+    name: 'test engineer',
+    url: 'test-engineer',
+    title: 'Test Engineer'
   }
 ];
