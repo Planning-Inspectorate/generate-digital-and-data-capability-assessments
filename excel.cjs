@@ -9,6 +9,7 @@ async function toSheet(roleLevel, name) {
 
   const sheet = wb.sheet("Self-Assessment");
 
+  sheet.cell("C10").value(new Date());
   sheet.cell("C12").value(roleLevel.title);
   sheet.cell("C13").value(roleLevel.name);
 

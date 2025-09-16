@@ -15,7 +15,7 @@ async function run() {
     const roleLevels = await levelsForRole(role, skillDefinitions);
     for (const roleLevel of roleLevels) {
       if (roleLevel.grade !== NO_GRADE) {
-        await excel.toSheet(roleLevel, `${outputDir}DDaT assessment - ${role.title} - ${roleLevel.grade} - ${roleLevel.name}.xlsx`);
+        await excel.toSheet(roleLevel, `${outputDir}PINS D&D Capability Assessment - ${role.title} - ${roleLevel.grade} - ${roleLevel.name}.xlsx`);
       }
 
       debugPrintRole(roleLevel, false);

@@ -2,7 +2,7 @@ export class RoleLevel {
   /**
    * @param {string} name
    * @param {string} title
-   * @param {string} grade
+   * @param {string|symbol} grade
    * @param {SkillLevel[]} skills
    */
   constructor({name, title, grade, skills}) {
