@@ -1,11 +1,12 @@
 const XlsxPopulate = require('xlsx-populate');
+const path = require("node:path");
 
 /**
  * @param {RoleLevel} roleLevel
  * @param {string} name
  */
 async function toSheet(roleLevel, name) {
-  const wb = await XlsxPopulate.fromFileAsync('./template.xlsx');
+  const wb = await XlsxPopulate.fromFileAsync(path.join(__dirname, 'template.xlsx'));
 
   const sheet = wb.sheet("Self-Assessment");
 
