@@ -13,6 +13,10 @@ export const TEMPLATE_MAX_SKILLS = 15;
 export const NO_PREFIX = Symbol();
 export const NO_GRADE = Symbol("NO GRADE");
 
+/**
+ * default grade map, varies by role and can be overridden in ROLE_CONFIG
+ * @type {GradeMap}
+ */
 export const DEFAULT_GRADE_MAP = {
   'junior': GRADES.EO,
   [NO_PREFIX]: GRADES.HEO,
@@ -22,6 +26,7 @@ export const DEFAULT_GRADE_MAP = {
 };
 
 /**
+ * Fetch and generate templates for each of these roles
  * @type {RoleConfig[]}
  */
 export const ROLE_CONFIG = [
