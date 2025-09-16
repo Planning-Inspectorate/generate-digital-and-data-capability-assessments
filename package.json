@@ -1,9 +1,10 @@
 {
-  "name": "ddat-templates",
+  "name": "generate-digital-and-data-capability-assessments",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "type": "module",
+  "private": true,
   "scripts": {
     "run": "node src/index.js",
     "test": "node --test"
