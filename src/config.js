@@ -8,6 +8,8 @@ export const GRADES = {
   G6: 'G6'
 };
 
+// number of skills the template is setup for
+export const TEMPLATE_MAX_SKILLS = 15;
 export const NO_PREFIX = Symbol();
 export const NO_GRADE = Symbol("NO GRADE");
 
