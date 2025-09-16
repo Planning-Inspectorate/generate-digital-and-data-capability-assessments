@@ -1,7 +1,7 @@
 {
   "name": "generate-digital-and-data-capability-assessments",
   "version": "1.0.0",
-  "description": "",
+  "description": "A small program to generate capability assessment templates (in Excel format) from the Government Digital and Data Profession Capability Framework website",
   "main": "src/index.js",
   "type": "module",
   "private": true,
